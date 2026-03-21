@@ -3,6 +3,7 @@
 #include <string>
 #include <optional>
 #include <stdexcept>
+#include <sstream>
 
 
 //tipos de token da expressao
@@ -218,5 +219,49 @@ private:
     }
 };
 
+std::string tokenToString(const Token& tok) {
+    std::ostringstream out;
+
+    switch (tok.type) {
+        case TokenType::LITERAL:
+            out << "LITERAL(";
+            if (*tok.literal == '\n') out << "\\n";
+            else if (*tok.literal == '\t') out << "\\t";
+            else if (*tok.literal == '\r') out << "\\r";
+            else out << *tok.literal;
+            out << ")";
+            break;
+
+        case TokenType::CHAR_CLASS:
+            out << "CHAR_CLASS";
+            break;
+
+        case TokenType::PIPE:
+            out << "PIPE";
+            break;
+
+        case TokenType::STAR:
+            out << "STAR";
+            break;
+
+        case TokenType::PLUS:
+            out << "PLUS";
+            break;
+
+        case TokenType::LPAREN:
+            out << "LPAREN";
+            break;
+
+        case TokenType::RPAREN:
+            out << "RPAREN";
+            break;
+
+        case TokenType::END_OF_INPUT:
+            out << "END_OF_INPUT";
+            break;
+    }
+
+    return out.str();
+}
 
 

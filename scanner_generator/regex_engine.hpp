@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 #include <optional>
+#include <iostream>
 #include "regex_tokenizer.hpp"
 
 /*
@@ -68,10 +69,125 @@ struct Plus : RegexNode {
 };
 
 /*
-parse_regex()        -> parse_union()
+void print_aux(std::unique_ptr<RegexNode> ast, int nivel) {
+    print_aux(no->esq, nivel+1);
+    for (int i = 0; i < nivel; i++) printf("\t");
+    printf("%d\n", no->chave);
+    print_aux(no->dir, nivel+1);
+}
+*/
+
+inline void print_aux(std::ostream& out, int level) {
+    for (int i = 0; i < level; ++i) {
+        out << " ";
+    }
+}
+
+//lida com escaped chars, util pra definir espaco branco
+inline std::string charToPrintable(char c) {
+    switch (c) {
+        case '\n': return "\\n";
+        case '\t': return "\\t";
+        case '\r': return "\\r";
+        case '\\': return "\\\\";
+        default: return std::string(1, c);
+    }
+}
+
+inline void print_CharClass(std::ostream& out, CharClassInfo clss) {
+    out << "[";
+    
+    if(clss.negated) {
+        out << "^";
+    }
+
+    for (const auto& r : clss.char_ranges) {
+        out << charToPrintable(r.start) << "-" << charToPrintable(r.end);
+    }
+
+    for (char c : clss.singles) {
+        out << charToPrintable(c);
+    }
+
+    out << "]";
+}
+
+inline void printAst(const RegexNode* node, std::ostream& out, int indent = 0) {
+    if (!node) {
+        print_aux(out, indent);
+        out << "<null>\n";
+        return;
+    }
+
+    if (auto lit = dynamic_cast<const Literal*>(node)) {
+        print_aux(out, indent);
+        out << "Literal(" << charToPrintable(lit->value) << ")\n";
+        return;
+    }
+
+    if (auto cls = dynamic_cast<const CharClass*>(node)) {
+        print_aux(out, indent);
+        out << "CharClass(";
+        print_CharClass(out, cls->clsinfo);
+        out << ")\n";
+        return;
+    }
+
+    if (auto cat = dynamic_cast<const Concat*>(node)) {
+        print_aux(out, indent);
+        out << "Concat(\n";
+        printAst(cat->left.get(), out, indent + 2);
+        printAst(cat->right.get(), out, indent + 2);
+        print_aux(out, indent);
+        out << ")\n";
+        return;
+    }
+
+    if (auto uni = dynamic_cast<const Union*>(node)) {
+        print_aux(out, indent);
+        out << "Union(\n";
+        printAst(uni->left.get(), out, indent + 2);
+        printAst(uni->right.get(), out, indent + 2);
+        print_aux(out, indent);
+        out << ")\n";
+        return;
+    }
+
+    if (auto star = dynamic_cast<const Star*>(node)) {
+        print_aux(out, indent);
+        out << "Star(\n";
+        printAst(star->child.get(), out, indent + 2);
+        print_aux(out, indent);
+        out << ")\n";
+        return;
+    }
+
+    if (auto plus = dynamic_cast<const Plus*>(node)) {
+        print_aux(out, indent);
+        out << "Plus(\n";
+        printAst(plus->child.get(), out, indent + 2);
+        print_aux(out, indent);
+        out << ")\n";
+        return;
+    }
+
+    throw std::runtime_error("Unkown regexnode??");
+}
+
+/*
+chamamos pela ordem de precedencia
+parse_regex()
+    |
+    v
 parse_union()
+     |
+     v
 parse_concat()
+     |
+     v
 parse_repetition()
+     |
+     v
 parse_primary()
 */
 //top down regex parser
@@ -93,7 +209,7 @@ class RegexEngine
         if (check(type)) {
             return advance();
         }
-        throw std::runtime_error("Esperava outro token");
+        throw std::runtime_error("Outro token era esperado!");
     }
 
     bool check(TokenType type) const
@@ -113,7 +229,9 @@ class RegexEngine
     }
 
     const Token& peek() const
-    {
+    {   
+
+        //std::cout << tokenToString(tokens[pos]) << std::endl;
         return tokens[pos];
     }
 
@@ -152,7 +270,7 @@ public:
 
     std::unique_ptr<RegexNode> parse_concat() {
         auto left = parse_repetition();
-
+        //enquanto o proximo token puder começar uma nova expressão, concatenamos
         while (startsPrimary(peek())) {
             auto right = parse_repetition();
             left = std::make_unique<Concat>(std::move(left), std::move(right));
@@ -161,13 +279,40 @@ public:
         return left;
     }
 
-    std::unique_ptr<RegexNode> parse_repetition();
+    std::unique_ptr<RegexNode> parse_repetition() {
+        auto node = parse_primary();
 
-    std::unique_ptr<RegexNode> parse_primary();
+        while (true) {
+            if (match(TokenType::STAR)) {
+                node = std::make_unique<Star>(std::move(node));
+            } else if (match(TokenType::PLUS)) {
+                node = std::make_unique<Plus>(std::move(node));
+            } else {
+                break;
+            }
+        }
 
-    bool startsPrimary(const Token& t);
+        return node;
+    }
 
+    std::unique_ptr<RegexNode> parse_primary() {
+        if (match(TokenType::LITERAL)) {
+            return std::make_unique<Literal>(*previous().literal);
+        } else if (match(TokenType::CHAR_CLASS)) {
+            return std::make_unique<CharClass>(*previous().charClass);
+        }
 
+        if (match(TokenType::LPAREN)) {//sub expresion! =D
+            auto node = parse_union();
+            expect(TokenType::RPAREN);
+            return node;
+        }
 
+        throw std::runtime_error("Expressão Primaria era esperada!");
+    }
 
+    bool startsPrimary(const Token& t) {
+        return t.type == TokenType::LITERAL 
+        || t.type == TokenType::CHAR_CLASS || t.type == TokenType::LPAREN;
+    }
 };
