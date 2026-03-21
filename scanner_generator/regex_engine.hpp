@@ -32,6 +32,7 @@ struct RegexNode {
     virtual ~RegexNode() = default;
 };
 
+//folhas
 struct Literal : RegexNode {
     char value;
     Literal(char c) : value(c) {}
@@ -42,6 +43,7 @@ struct CharClass : RegexNode {
     CharClass(const CharClassInfo& ci) : clsinfo(ci) {}
 };
 
+//nos internos da arvore
 struct Concat : RegexNode {
     std::unique_ptr<RegexNode> left;
     std::unique_ptr<RegexNode> right;
@@ -230,8 +232,6 @@ class RegexEngine
 
     const Token& peek() const
     {   
-
-        //std::cout << tokenToString(tokens[pos]) << std::endl;
         return tokens[pos];
     }
 

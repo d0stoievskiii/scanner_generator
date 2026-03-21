@@ -141,7 +141,6 @@ private:
             case '|':  return Token{TokenType::LITERAL, '|', std::nullopt};
             case '*':  return Token{TokenType::LITERAL, '*', std::nullopt};
             case '+':  return Token{TokenType::LITERAL, '+', std::nullopt};
-            case '?':  return Token{TokenType::LITERAL, '?', std::nullopt};
             default:
                 return Token{TokenType::LITERAL, escaped, std::nullopt};
         }
