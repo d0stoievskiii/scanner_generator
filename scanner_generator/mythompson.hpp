@@ -49,11 +49,11 @@ inline Automato buildCharClass(const CharClass* node) {
 
 inline Automato buildNFA(const RegexNode* node) {
     /*
-    if Literal → return literal fragment
-    if CharClass → return class fragment
-    if Concat → connect left + right
-    if Union → build branching
-    if Star → build loop
-    if Plus → build loop (no skip)
+    if Literal -> return literal fragment
+    if CharClass -> return class fragment
+    if Concat -> connect left + right
+    if Union -> build branching
+    if Star -> build loop
+    if Plus -> build loop (no skip)
     */
 }
