@@ -79,6 +79,20 @@ void print_aux(std::unique_ptr<RegexNode> ast, int nivel) {
 }
 */
 
+inline std::vector<char> expandCharClass(const CharClassInfo& clss) {
+    std::vector<char> ret;
+    //problema adicionar mesmo char 2 vezes se regex for mal formado
+    for (auto& range : clss.char_ranges) {
+        for (char c = range.start; c <= range.end; c++) {
+            ret.push_back(c);
+        }
+    }
+    for (auto& c : clss.singles) {
+        ret.push_back(c);
+    }
+    return ret;
+}
+
 inline void print_aux(std::ostream& out, int level) {
     for (int i = 0; i < level; ++i) {
         out << " ";
