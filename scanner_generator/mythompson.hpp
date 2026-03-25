@@ -114,12 +114,41 @@ inline Automato buildStar(Automato s) {
 }
 
 inline Automato buildNFA(const RegexNode* node) {
-    /*
-    if Literal -> return literal fragment
-    if CharClass -> return class fragment
-    if Concat -> connect left + right
-    if Union -> build branching
-    if Star -> build loop
-    if Plus -> build loop (no skip)
-    */
+    if (!node) {
+        throw std::runtime_error("regex nula!");
+    }
+    // if Literal -> return literal fragment
+    if (auto lit = dynamic_cast<const Literal*>(node)) {
+        return buildLiteral(lit);
+    }
+    // if CharClass -> return class fragment
+    if (auto cls = dynamic_cast<const CharClass*>(node)) {
+        return buildCharClass(cls);
+    }
+    // if Concat -> connect left + right
+    if (auto cat = dynamic_cast<const Concat*>(node)) {
+        Automato left = buildNFA(cat->left.get());
+        Automato right = buildNFA(cat->right.get());
+        return buildConcat(left, right);
+    }
+    // if Union -> build branching
+    if (auto uni = dynamic_cast<const Union*>(node)) {
+        Automato left = buildNFA(uni->left.get());
+        Automato right = buildNFA(uni->right.get());
+        return buildUnion(left, right);
+    }
+    // if Star -> build loop
+    if (auto star = dynamic_cast<const Star*>(node)) {
+        Automato child = buildNFA(star->child.get());
+        return buildStar(child);
+    }
+    // if Plus -> build loop (no skip)
+    if (auto plus = dynamic_cast<const Plus*>(node)) {
+        Automato child = buildNFA(plus->child.get());
+
+        Automato star = buildStar(child);
+        return buildConcat(child, star);
+    }
+
+    throw std::runtime_error("Regex invalida!");
 }
