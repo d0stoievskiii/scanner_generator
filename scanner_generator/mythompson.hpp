@@ -1,12 +1,16 @@
+#pragma once
 
 #include <map>
 #include <set>
+#include <queue>
+#include <unordered_set>
+#include <iostream>
 #include "regex_engine.hpp"
 
 struct State {
     int id;
 
-    std::set<State*> epilson_transitions;
+    std::set<State*> epsilon_transitions;
     std::map<char, std::set<State*>> transitions;
 };
 
@@ -56,9 +60,9 @@ start state of N(t) are merged into a single state, with all the transitions
 in or out of either state. //livro pg.160
 */
 
-//(left.start)-char->((left.accept)-epilson->(right.start))-char->(right.accept)
+//(left.start)-char->((left.accept)-epsilon->(right.start))-char->(right.accept)
 inline Automato buildConcat(Automato left, Automato right) {
-    left.accept->epilson_transitions.insert(right.start);
+    left.accept->epsilon_transitions.insert(right.start);
 
     return Automato{left.start, right.accept};
 }
@@ -69,21 +73,21 @@ respectively. There are E-transitions from i to the start states of N (s)
 and N ( t) , and each of their accepting states have E-transitions to the
 accepting state j. //pg. 160
 */
-/*   --epilson-->(left.start)--->(left.accept) \
+/*   --epsilon-->(left.start)--->(left.accept) \
     /                                           \
 (start)                                           (accept)
     \                                            /
-     --epilson-->(right.start)--->(right.accept)/
+     --epsilon-->(right.start)--->(right.accept)/
 */
 inline Automato buildUnion(Automato left, Automato right) {
     auto start = StateFactory::newState();
     auto accept = StateFactory::newState();
 
-    start->epilson_transitions.insert(left.start);
-    start->epilson_transitions.insert(right.start);
+    start->epsilon_transitions.insert(left.start);
+    start->epsilon_transitions.insert(right.start);
 
-    left.accept->epilson_transitions.insert(accept);
-    right.accept->epilson_transitions.insert(accept);
+    left.accept->epsilon_transitions.insert(accept);
+    right.accept->epsilon_transitions.insert(accept);
 
     return Automato{start, accept};
 }
@@ -104,10 +108,10 @@ inline Automato buildStar(Automato s) {
     auto start = StateFactory::newState();
     auto accept = StateFactory::newState();
 
-    start->epilson_transitions.insert(s.start);
-    start->epilson_transitions.insert(accept);
-    s.accept->epilson_transitions.insert(s.start);
-    s.accept->epilson_transitions.insert(accept);
+    start->epsilon_transitions.insert(s.start);
+    start->epsilon_transitions.insert(accept);
+    s.accept->epsilon_transitions.insert(s.start);
+    s.accept->epsilon_transitions.insert(accept);
 
     return Automato{start, accept};
 
@@ -151,4 +155,75 @@ inline Automato buildNFA(const RegexNode* node) {
     }
 
     throw std::runtime_error("Regex invalida!");
+}
+
+
+inline std::vector<State*> collectStates(State* start) {
+    std::vector<State*> result;
+    std::set<State*> visited;
+    std::queue<State*> q;
+
+    q.push(start);
+    visited.insert(start);
+
+    while (!q.empty()) {
+        State* s = q.front();
+        q.pop();
+
+        result.push_back(s);
+
+        //chars
+        for (auto& [ch, targets] : s->transitions) {
+            for (State* t : targets) {
+                if (!visited.count(t)) {
+                    visited.insert(t);
+                    q.push(t);
+                }
+            }
+        }
+
+        //empties
+        for (State* t : s->epsilon_transitions) {
+            if (!visited.count(t)) {
+                visited.insert(t);
+                q.push(t);
+            }
+        }
+    }
+
+    return result;
+}
+
+inline void printState(State* s, State* accept) {
+    std::cout << "State " << s->id;
+
+    if (s == accept) {
+        std::cout << " (accept)";
+    }
+
+    std::cout << ":\n";
+
+    //char transitions
+    for (const auto& [ch, targets] : s->transitions) {
+        for (State* t : targets) {
+            std::cout << "  --" << ch << "--> " << t->id << "\n";
+        }
+    }
+
+    //epsilon transitions
+    for (State* t : s->epsilon_transitions) {
+        std::cout << "  --ε--> " << t->id << "\n";
+    }
+}
+
+inline void printAutomato(const Automato& a) {
+    auto states = collectStates(a.start);
+
+    std::cout << "Start state: " << a.start->id << "\n";
+    std::cout << "Accept state: " << a.accept->id << "\n\n";
+
+    for (State* s : states) {
+        printState(s, a.accept);
+        std::cout << "\n";
+    }
 }
