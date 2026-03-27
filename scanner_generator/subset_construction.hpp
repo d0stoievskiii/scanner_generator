@@ -15,7 +15,7 @@ inline std::set<State*> eClosure(const std::set<State*>& T) {
         auto s = stack.top();
         stack.pop();
 
-        for (const auto e : eClosure(std::set<State*>{s})) {
+        for (const auto e : s->epsilon_transitions) {
             if (!ret.count(e)) {
                 ret.insert(e);
                 stack.push(e);
