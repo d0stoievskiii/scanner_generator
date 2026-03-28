@@ -5,6 +5,18 @@
 #include <queue>
 #include "mythompson.hpp"
 
+
+/*
+push all states of T onto stack;
+initialize t-closure(T) to T;
+while ( stack is not empty ) 
+    pop t, the top element, off stack;
+    for ( each state u with an edge from t to u labeled t )
+        if ( u is not in t-closure(T) )
+            add u to t-closure(T);
+            push u onto stack;
+-->livro pg.154
+*/
 inline std::set<State*> eClosure(const std::set<State*>& T) {
     std::set<State*> ret = T;//todo estado é alcançavel por si mesmo numa transição vazia
     std::stack<State*> stack;
@@ -40,7 +52,18 @@ struct TableLine {
     char input;
 };
 
+/*
+while ( there is an unmarked state T in Dstates )
+    mark T;
+    for ( each input symbol a )
 
+        U = t-closure( move(T, a));
+        if ( U is not in Dstates )
+            add U as an unmarked state to Dstates;
+        Dtran[T, a] = U; 
+
+-->livro pg.154
+*/
 inline std::map<TableLine, std::set<State*>> subset_construction(Automato& NFA) {
 
     std::set<char> alphabet;
