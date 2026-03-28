@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <stack>
+#include <queue>
 #include "mythompson.hpp"
 
 inline std::set<State*> eClosure(const std::set<State*>& T) {
@@ -32,4 +33,45 @@ inline std::set<State*> eClosure(State* s) {
 
 inline std::set<State*> move(std::set<State*> T, char a) {
 
+}
+
+struct TableLine {
+    std::set<State*> start;
+    char input;
+};
+
+
+inline std::map<TableLine, std::set<State*>> subset_construction(Automato& NFA) {
+
+    std::set<char> alphabet;
+    for (char a = 0; a < 256; a++) {//assuma alfabeto é a tabela ASCII
+        alphabet.insert(a);
+    }
+
+
+    std::set<std::set<State*>> Dstates;
+    std::queue<std::set<State*>> unmarked;
+    std::map<TableLine, std::set<State*>> Dtran;
+    
+    auto startset = eClosure(NFA.start);
+    Dstates.insert(startset);
+    unmarked.emplace(startset);
+
+    while (!unmarked.empty()) {
+        auto T = unmarked.front();
+        unmarked.pop();
+
+        for (const auto& a : alphabet) {
+            
+            auto U = eClosure(move(T, a));
+            if (U.empty())
+                continue;
+            if (!Dstates.count(U)) {
+                Dstates.insert(U);
+                unmarked.emplace(U);
+            }
+            Dtran[{T, a}]= U;     
+        }
+    }
+    return Dtran;
 }
