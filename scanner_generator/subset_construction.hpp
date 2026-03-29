@@ -61,6 +61,13 @@ inline std::set<State*> move(std::set<State*> T, char a) {
 struct TableLine {
     std::set<State*> start;
     char input;
+
+    bool operator<(const TableLine& other) const {
+    if (start != other.start)
+        return start < other.start;
+    return input < other.input;
+    }
+
 };
 
 /*
@@ -75,22 +82,26 @@ while ( there is an unmarked state T in Dstates )
 
 -->livro pg.154
 */
-inline std::map<TableLine, std::set<State*>> subset_construction(Automato& NFA) {
+inline AFD subset_construction(Automato& NFA) {
 
+        
     std::set<char> alphabet;
     for (char a = 0; a < 256; a++) {//assuma alfabeto é a tabela ASCII
         alphabet.insert(a);
     }
-
-
+    
     std::set<std::set<State*>> Dstates;
     std::queue<std::set<State*>> unmarked;
     std::map<TableLine, std::set<State*>> Dtran;
-    
+
+    AFD dfa;
     auto startset = eClosure(NFA.start);
+
+    if (startset.count(NFA.accept)) {dfa.final_states.insert(startset); }
+
     Dstates.insert(startset);
     unmarked.emplace(startset);
-
+    
     while (!unmarked.empty()) {
         auto T = unmarked.front();
         unmarked.pop();
@@ -103,9 +114,17 @@ inline std::map<TableLine, std::set<State*>> subset_construction(Automato& NFA) 
             if (!Dstates.count(U)) {
                 Dstates.insert(U);
                 unmarked.emplace(U);
+                if (U.count(NFA.accept)) { dfa.final_states.insert(U); }    
             }
             Dtran[{T, a}]= U;     
         }
     }
-    return Dtran;
+
+    dfa.states = Dstates;
+    dfa.transitions = Dtran;
+    dfa.start = startset;
+
+    
+
+    return dfa;
 }
