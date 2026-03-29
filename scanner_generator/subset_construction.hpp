@@ -17,6 +17,32 @@ while ( stack is not empty )
             push u onto stack;
 -->livro pg.154
 */
+
+
+
+struct TableLine {
+    std::set<State*> start;
+    char input;
+
+    bool operator<(const TableLine& other) const {
+    if (start != other.start)
+        return start < other.start;
+    return input < other.input;
+    }
+
+};
+
+
+
+struct AFD {
+    std::set<State*> start;
+    std::set<std::set<State*>> states;
+    std::set<std::set<State*>> final_states;
+    std::map<TableLine, std::set<State*>> transitions;
+};
+
+
+
 inline std::set<State*> eClosure(const std::set<State*>& T) {
     std::set<State*> ret = T;//todo estado é alcançavel por si mesmo numa transição vazia
     std::stack<State*> stack;
