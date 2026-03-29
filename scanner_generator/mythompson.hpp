@@ -19,6 +19,16 @@ struct Automato {
     State* accept;
 };
 
+
+struct AFD {
+    std::set<State*> start;
+    std::set<std::set<State*>> states;
+    std::set<std::set<State*>> final_states;
+    std::map<TableLine, std::set<State*>> transitions;
+};
+
+
+
 namespace StateFactory {
     inline int next_state = 0;
 
