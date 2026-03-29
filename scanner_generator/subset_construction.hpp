@@ -45,6 +45,17 @@ inline std::set<State*> eClosure(State* s) {
 
 inline std::set<State*> move(std::set<State*> T, char a) {
 
+    std::set<State*> ret ; 
+
+    for (const auto s : T) {
+        if (s->transitions.count(a)) {
+            for (const auto t : s->transitions[a]) {
+                ret.insert(t);
+            }
+        }
+    }
+
+    return ret; 
 }
 
 struct TableLine {
