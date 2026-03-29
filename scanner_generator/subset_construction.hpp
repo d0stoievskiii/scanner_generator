@@ -72,17 +72,27 @@ while ( there is an unmarked state T in Dstates )
 */
 inline AFD subset_construction(Automato& NFA) {
 
-        
+      
     std::set<char> alphabet;
-    for (char a = 0; a < 256; a++) {//assuma alfabeto é a tabela ASCII
+    /*
+    for (char a = 0; a < 256; a++) {
         alphabet.insert(a);
     }
+    */
+    
+
+    for (int a = 0; a < 256; a++) { //assuma alfabeto é a tabela ASCII
+        alphabet.insert(static_cast<char>(a));
+    }
+
+
     
     std::set<std::set<State*>> Dstates;
     std::queue<std::set<State*>> unmarked;
     std::map<TableLine, std::set<State*>> Dtran;
 
     AFD dfa;
+    
     auto startset = eClosure(NFA.start);
 
     if (startset.count(NFA.accept)) {dfa.final_states.insert(startset); }
