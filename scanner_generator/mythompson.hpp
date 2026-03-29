@@ -20,6 +20,20 @@ struct Automato {
 };
 
 
+struct TableLine {
+    std::set<State*> start;
+    char input;
+
+    bool operator<(const TableLine& other) const {
+    if (start != other.start)
+        return start < other.start;
+    return input < other.input;
+    }
+
+};
+
+
+
 struct AFD {
     std::set<State*> start;
     std::set<std::set<State*>> states;

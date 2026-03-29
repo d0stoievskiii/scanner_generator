@@ -58,18 +58,6 @@ inline std::set<State*> move(std::set<State*> T, char a) {
     return ret; 
 }
 
-struct TableLine {
-    std::set<State*> start;
-    char input;
-
-    bool operator<(const TableLine& other) const {
-    if (start != other.start)
-        return start < other.start;
-    return input < other.input;
-    }
-
-};
-
 /*
 while ( there is an unmarked state T in Dstates )
     mark T;
