@@ -12,6 +12,10 @@ struct State {
 
     std::set<State*> epsilon_transitions;
     std::map<char, std::set<State*>> transitions;
+
+    bool is_final = false;
+    std::string token = "";
+    int priority = -1;
 };
 
 struct Automato {
@@ -26,10 +30,18 @@ namespace StateFactory {
     inline int next_state = 0;
 
     inline State* newState() {
-        return new State{next_state++};
+        State* s = new State;
+        s->id = next_state++;
+        return s;
     }
 }
 
+// lidar com novos campos
+inline void markFinal(State* s, const std::string& token, int priority) {
+    s->is_final = true;
+    s->token = token;
+    s->priority = priority;
+}
 
 //(start) --a--> (accept)
 inline Automato buildLiteral(const Literal* node) {
@@ -200,8 +212,9 @@ inline std::vector<State*> collectStates(State* start) {
 inline void printState(State* s, State* accept) {
     std::cout << "State " << s->id;
 
-    if (s == accept) {
-        std::cout << " (accept)";
+    if (s->is_final) {
+        std::cout << " (final: " << s->token << " priority: "
+        << s->priority << ")";
     }
 
     std::cout << ":\n";
@@ -215,7 +228,7 @@ inline void printState(State* s, State* accept) {
 
     //epsilon transitions
     for (State* t : s->epsilon_transitions) {
-        std::cout << "  --ε--> " << t->id << "\n";
+        std::cout << "  --eps--> " << t->id << "\n";
     }
 }
 
@@ -223,7 +236,11 @@ inline void printAutomato(const Automato& a) {
     auto states = collectStates(a.start);
 
     std::cout << "Start state: " << a.start->id << "\n";
-    std::cout << "Accept state: " << a.accept->id << "\n\n";
+    if (a.accept) {
+        std::cout << "Accept state: " << a.accept->id << "\n\n";
+    } else {
+        std::cout << "Accept state: (none)\n\n";
+    }
 
     for (State* s : states) {
         printState(s, a.accept);

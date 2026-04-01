@@ -5,6 +5,7 @@
 #include <string>
 #include <optional>
 #include <iostream>
+#include <cstdint>
 #include "regex_tokenizer.hpp"
 
 /*

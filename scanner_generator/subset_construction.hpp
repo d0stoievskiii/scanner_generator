@@ -5,7 +5,6 @@
 #include <queue>
 #include "mythompson.hpp"
 
-
 /*
 push all states of T onto stack;
 initialize t-closure(T) to T;
@@ -17,8 +16,6 @@ while ( stack is not empty )
             push u onto stack;
 -->livro pg.154
 */
-
-
 
 struct TableLine {
     std::set<State*> start;
@@ -32,16 +29,18 @@ struct TableLine {
 
 };
 
-
+struct DFAStateInfo {
+    bool is_final = false;
+    std::string token = "";
+    int priority = -1;
+};
 
 struct AFD {
     std::set<State*> start;
     std::set<std::set<State*>> states;
-    std::set<std::set<State*>> final_states;
+    std::map<std::set<State*>, DFAStateInfo> info;
     std::map<TableLine, std::set<State*>> transitions;
 };
-
-
 
 inline std::set<State*> eClosure(const std::set<State*>& T) {
     std::set<State*> ret = T;//todo estado é alcançavel por si mesmo numa transição vazia
@@ -69,7 +68,7 @@ inline std::set<State*> eClosure(State* s) {
     return eClosure(std::set<State*>{s});
 }
 
-inline std::set<State*> move(std::set<State*> T, char a) {
+inline std::set<State*> move(const std::set<State*>& T, char a) {
 
     std::set<State*> ret ; 
 
@@ -82,6 +81,28 @@ inline std::set<State*> move(std::set<State*> T, char a) {
     }
 
     return ret; 
+}
+
+// retorna o token baseado na prioridade
+inline DFAStateInfo getBestToken(const std::set<State*>& states) {
+    DFAStateInfo result;
+    State* best = nullptr;
+
+    for (State* s : states) {
+        if (s->is_final) {
+            if (!best || s->priority < best->priority) {
+                best = s;
+            }
+        }
+    }
+
+    if (best) {
+        result.is_final = true;
+        result.token = best->token;
+        result.priority = best->priority;
+    }
+
+    return result;
 }
 
 /*
@@ -121,7 +142,9 @@ inline AFD subset_construction(Automato& NFA) {
     
     auto startset = eClosure(NFA.start);
 
-    if (startset.count(NFA.accept)) {dfa.final_states.insert(startset); }
+    dfa.start = startset;
+    dfa.states.insert(startset);
+    dfa.info[startset] = getBestToken(startset);
 
     Dstates.insert(startset);
     unmarked.emplace(startset);
@@ -138,7 +161,8 @@ inline AFD subset_construction(Automato& NFA) {
             if (!Dstates.count(U)) {
                 Dstates.insert(U);
                 unmarked.emplace(U);
-                if (U.count(NFA.accept)) { dfa.final_states.insert(U); }    
+
+                dfa.info[U] = getBestToken(U);
             }
             Dtran[{T, a}]= U;     
         }
@@ -147,8 +171,6 @@ inline AFD subset_construction(Automato& NFA) {
     dfa.states = Dstates;
     dfa.transitions = Dtran;
     dfa.start = startset;
-
-    
 
     return dfa;
 }
