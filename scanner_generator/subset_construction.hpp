@@ -43,7 +43,7 @@ struct AFD {
 };
 
 inline std::set<State*> eClosure(const std::set<State*>& T) {
-    std::set<State*> ret = T;//todo estado é alcançavel por si mesmo numa transição vazia
+    std::set<State*> ret = T; //todo estado é alcançavel por si mesmo numa transição vazia
     std::stack<State*> stack;
     for (const auto s : T) {
         stack.push(s);

@@ -163,10 +163,11 @@ inline Automato buildNFA(const RegexNode* node) {
     }
     // if Plus -> build loop (no skip)
     if (auto plus = dynamic_cast<const Plus*>(node)) {
-        Automato child = buildNFA(plus->child.get());
+        Automato child1 = buildNFA(plus->child.get());
+        Automato child2 = buildNFA(plus->child.get());
 
-        Automato star = buildStar(child);
-        return buildConcat(child, star);
+        Automato star = buildStar(child2);
+        return buildConcat(child1, star);
     }
 
     throw std::runtime_error("Regex invalida!");
