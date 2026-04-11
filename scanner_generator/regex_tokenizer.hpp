@@ -218,7 +218,7 @@ private:
     }
 };
 
-std::string tokenToString(const Token& tok) {
+inline std::string tokenToString(const Token& tok) {
     std::ostringstream out;
 
     switch (tok.type) {

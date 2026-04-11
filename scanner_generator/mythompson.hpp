@@ -210,7 +210,7 @@ inline std::vector<State*> collectStates(State* start) {
     return result;
 }
 
-inline void printState(State* s, State* accept) {
+inline void printState(State* s, [[maybe_unused]] State* accept) {
     std::cout << "State " << s->id;
 
     if (s->is_final) {
