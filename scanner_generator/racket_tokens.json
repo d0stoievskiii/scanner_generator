@@ -1,0 +1,466 @@
+{
+  "schema": "scanner-generator-token-stream/v2",
+  "language": "racket",
+  "generated_at_utc": "2026-04-11T13:42:53Z",
+  "source": {
+    "spec_file": "racket_specs.txt",
+    "input_file": "racket_input.rkt",
+    "input_length": 55
+  },
+  "summary": {
+    "token_count": 18,
+    "includes_eof": true
+  },
+  "tokens": [
+    {
+      "id": 0,
+      "type": "LPAREN",
+      "symbol": "LPAREN",
+      "priority": 0,
+      "lexeme": "(",
+      "length": 1,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": "(",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 0, "line": 1, "column": 1 },
+      "end": { "index": 1, "line": 1, "column": 2 },
+      "span": { "start": 0, "end": 1 },
+      "parser": {
+        "racket": {
+          "token_type": "LPAREN",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 1,
+      "type": "DEFINE",
+      "symbol": "DEFINE",
+      "priority": 4,
+      "lexeme": "define",
+      "length": 6,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": "define",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 1, "line": 1, "column": 2 },
+      "end": { "index": 7, "line": 1, "column": 8 },
+      "span": { "start": 1, "end": 7 },
+      "parser": {
+        "racket": {
+          "token_type": "DEFINE",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": "SYMBOL",
+      "symbol": "SYMBOL",
+      "priority": 9,
+      "lexeme": "x",
+      "length": 1,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": "x",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 8, "line": 1, "column": 9 },
+      "end": { "index": 9, "line": 1, "column": 10 },
+      "span": { "start": 8, "end": 9 },
+      "parser": {
+        "racket": {
+          "token_type": "SYMBOL",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 3,
+      "type": "NUMBER",
+      "symbol": "NUMBER",
+      "priority": 7,
+      "lexeme": "42",
+      "length": 2,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "integer",
+      "value_string": "42",
+      "value_int": 42,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 10, "line": 1, "column": 11 },
+      "end": { "index": 12, "line": 1, "column": 13 },
+      "span": { "start": 10, "end": 12 },
+      "parser": {
+        "racket": {
+          "token_type": "NUMBER",
+          "datum_kind": "integer",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 4,
+      "type": "RPAREN",
+      "symbol": "RPAREN",
+      "priority": 1,
+      "lexeme": ")",
+      "length": 1,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": ")",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 12, "line": 1, "column": 13 },
+      "end": { "index": 13, "line": 1, "column": 14 },
+      "span": { "start": 12, "end": 13 },
+      "parser": {
+        "racket": {
+          "token_type": "RPAREN",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 5,
+      "type": "LPAREN",
+      "symbol": "LPAREN",
+      "priority": 0,
+      "lexeme": "(",
+      "length": 1,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": "(",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 14, "line": 2, "column": 1 },
+      "end": { "index": 15, "line": 2, "column": 2 },
+      "span": { "start": 14, "end": 15 },
+      "parser": {
+        "racket": {
+          "token_type": "LPAREN",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 6,
+      "type": "IF",
+      "symbol": "IF",
+      "priority": 5,
+      "lexeme": "if",
+      "length": 2,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": "if",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 15, "line": 2, "column": 2 },
+      "end": { "index": 17, "line": 2, "column": 4 },
+      "span": { "start": 15, "end": 17 },
+      "parser": {
+        "racket": {
+          "token_type": "IF",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 7,
+      "type": "BOOLEAN",
+      "symbol": "BOOLEAN",
+      "priority": 3,
+      "lexeme": "#t",
+      "length": 2,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "boolean",
+      "value_string": "true",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": true,
+      "start": { "index": 18, "line": 2, "column": 5 },
+      "end": { "index": 20, "line": 2, "column": 7 },
+      "span": { "start": 18, "end": 20 },
+      "parser": {
+        "racket": {
+          "token_type": "BOOLEAN",
+          "datum_kind": "boolean",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 8,
+      "type": "LPAREN",
+      "symbol": "LPAREN",
+      "priority": 0,
+      "lexeme": "(",
+      "length": 1,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": "(",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 21, "line": 2, "column": 8 },
+      "end": { "index": 22, "line": 2, "column": 9 },
+      "span": { "start": 21, "end": 22 },
+      "parser": {
+        "racket": {
+          "token_type": "LPAREN",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 9,
+      "type": "DISPLAY",
+      "symbol": "DISPLAY",
+      "priority": 6,
+      "lexeme": "display",
+      "length": 7,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": "display",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 22, "line": 2, "column": 9 },
+      "end": { "index": 29, "line": 2, "column": 16 },
+      "span": { "start": 22, "end": 29 },
+      "parser": {
+        "racket": {
+          "token_type": "DISPLAY",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 10,
+      "type": "STRING",
+      "symbol": "STRING",
+      "priority": 8,
+      "lexeme": "\"ok 123\"",
+      "length": 8,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "string",
+      "value_string": "ok 123",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 30, "line": 2, "column": 17 },
+      "end": { "index": 38, "line": 2, "column": 25 },
+      "span": { "start": 30, "end": 38 },
+      "parser": {
+        "racket": {
+          "token_type": "STRING",
+          "datum_kind": "string",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 11,
+      "type": "RPAREN",
+      "symbol": "RPAREN",
+      "priority": 1,
+      "lexeme": ")",
+      "length": 1,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": ")",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 38, "line": 2, "column": 25 },
+      "end": { "index": 39, "line": 2, "column": 26 },
+      "span": { "start": 38, "end": 39 },
+      "parser": {
+        "racket": {
+          "token_type": "RPAREN",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 12,
+      "type": "LPAREN",
+      "symbol": "LPAREN",
+      "priority": 0,
+      "lexeme": "(",
+      "length": 1,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": "(",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 40, "line": 2, "column": 27 },
+      "end": { "index": 41, "line": 2, "column": 28 },
+      "span": { "start": 40, "end": 41 },
+      "parser": {
+        "racket": {
+          "token_type": "LPAREN",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 13,
+      "type": "DISPLAY",
+      "symbol": "DISPLAY",
+      "priority": 6,
+      "lexeme": "display",
+      "length": 7,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": "display",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 41, "line": 2, "column": 28 },
+      "end": { "index": 48, "line": 2, "column": 35 },
+      "span": { "start": 41, "end": 48 },
+      "parser": {
+        "racket": {
+          "token_type": "DISPLAY",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 14,
+      "type": "STRING",
+      "symbol": "STRING",
+      "priority": 8,
+      "lexeme": "\"no\"",
+      "length": 4,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "string",
+      "value_string": "no",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 49, "line": 2, "column": 36 },
+      "end": { "index": 53, "line": 2, "column": 40 },
+      "span": { "start": 49, "end": 53 },
+      "parser": {
+        "racket": {
+          "token_type": "STRING",
+          "datum_kind": "string",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 15,
+      "type": "RPAREN",
+      "symbol": "RPAREN",
+      "priority": 1,
+      "lexeme": ")",
+      "length": 1,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": ")",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 53, "line": 2, "column": 40 },
+      "end": { "index": 54, "line": 2, "column": 41 },
+      "span": { "start": 53, "end": 54 },
+      "parser": {
+        "racket": {
+          "token_type": "RPAREN",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 16,
+      "type": "RPAREN",
+      "symbol": "RPAREN",
+      "priority": 1,
+      "lexeme": ")",
+      "length": 1,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": ")",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 54, "line": 2, "column": 41 },
+      "end": { "index": 55, "line": 2, "column": 42 },
+      "span": { "start": 54, "end": 55 },
+      "parser": {
+        "racket": {
+          "token_type": "RPAREN",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 17,
+      "type": "EOF",
+      "symbol": "EOF",
+      "priority": -1,
+      "lexeme": "",
+      "length": 0,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "eof",
+      "value_string": "",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 55, "line": 2, "column": 42 },
+      "end": { "index": 55, "line": 2, "column": 42 },
+      "span": { "start": 55, "end": 55 },
+      "parser": {
+        "racket": {
+          "token_type": "EOF",
+          "datum_kind": "eof",
+          "is_eof": true
+        }
+      }
+    }
+  ]
+}

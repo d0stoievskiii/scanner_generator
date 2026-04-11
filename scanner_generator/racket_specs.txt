@@ -1,0 +1,10 @@
+LPAREN \(
+RPAREN \)
+QUOTE '
+BOOLEAN #t|#f
+DEFINE define
+IF if
+DISPLAY display
+NUMBER (\-[0-9]+)|([0-9]+)
+STRING \"[a-zA-Z0-9 _]*\"
+SYMBOL [a-zA-Z_][a-zA-Z0-9_]*

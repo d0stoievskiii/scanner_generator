@@ -1,0 +1,91 @@
+{
+  "schema": "scanner-generator-token-stream/v2",
+  "language": "racket",
+  "generated_at_utc": "2026-04-11T13:31:24Z",
+  "source": {
+    "spec_file": "custom_specs.txt",
+    "input_file": "sample_input.txt",
+    "input_length": 5
+  },
+  "summary": {
+    "token_count": 3,
+    "includes_eof": true
+  },
+  "tokens": [
+    {
+      "id": 0,
+      "type": "TEST",
+      "symbol": "TEST",
+      "priority": 0,
+      "lexeme": "aaa",
+      "length": 3,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": "aaa",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 0, "line": 1, "column": 1 },
+      "end": { "index": 3, "line": 1, "column": 4 },
+      "span": { "start": 0, "end": 3 },
+      "parser": {
+        "racket": {
+          "token_type": "TEST",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 1,
+      "type": "TEST",
+      "symbol": "TEST",
+      "priority": 0,
+      "lexeme": "b",
+      "length": 1,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "symbol",
+      "value_string": "b",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 3, "line": 1, "column": 4 },
+      "end": { "index": 4, "line": 1, "column": 5 },
+      "span": { "start": 3, "end": 4 },
+      "parser": {
+        "racket": {
+          "token_type": "TEST",
+          "datum_kind": "symbol",
+          "is_eof": false
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": "EOF",
+      "symbol": "EOF",
+      "priority": -1,
+      "lexeme": "",
+      "length": 0,
+      "channel": "default",
+      "ignored": false,
+      "value_kind": "eof",
+      "value_string": "",
+      "value_int": null,
+      "value_float": null,
+      "value_bool": null,
+      "start": { "index": 5, "line": 2, "column": 1 },
+      "end": { "index": 5, "line": 2, "column": 1 },
+      "span": { "start": 5, "end": 5 },
+      "parser": {
+        "racket": {
+          "token_type": "EOF",
+          "datum_kind": "eof",
+          "is_eof": true
+        }
+      }
+    }
+  ]
+}

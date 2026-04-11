@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <cctype>
 #include "subset_construction.hpp"
 
 // Lê arquivo de regexes com ids ordenados por prioridade
@@ -32,11 +33,34 @@ public:
         while (std::getline(file, line)) {
             if (line.empty()) continue;
 
+            // ignora linhas que só possuem espaços em branco
+            bool only_spaces = true;
+            for (char c : line) {
+                if (!std::isspace(static_cast<unsigned char>(c))) {
+                    only_spaces = false;
+                    break;
+                }
+            }
+            if (only_spaces) continue;
+
             std::istringstream iss(line);
             std::string token, regex;
 
-            if (!(iss >> token >> regex)) {
+            if (!(iss >> token)) {
                 throw std::runtime_error("Linha inválida: " + line);
+            }
+
+            std::getline(iss, regex);
+
+            // remove espaço inicial da regex restante na linha
+            size_t begin = 0;
+            while (begin < regex.size() && std::isspace(static_cast<unsigned char>(regex[begin]))) {
+                begin++;
+            }
+            regex = regex.substr(begin);
+
+            if (regex.empty()) {
+                throw std::runtime_error("Regex ausente para token: " + token);
             }
 
             specs.emplace_back(token, regex);
