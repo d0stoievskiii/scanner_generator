@@ -115,7 +115,7 @@ void generate_scanner_code(const AFD& afd, const std::string& outDir) {
         throw std::runtime_error("Could not open scanner_gerado.hpp for writing");
     }
     hpp << "#pragma once\n#include <string>\n#include <vector>\n#include <optional>\n";
-    hpp << "struct TokenMatch { std::string token; int start; int end; };\n";
+    hpp << "struct TokenMatch { std::string token; int start; int end; int line; int column;};\n";
     hpp << "std::vector<TokenMatch> scan(const std::string& input);\n";
     hpp.close();
 
@@ -166,7 +166,13 @@ std::vector<TokenMatch> scan(const std::string& input) {
     std::vector<TokenMatch> result;
     size_t pos = 0;
 
+    int line = 1;
+    int column = 1;
+
     while (pos < input.size()) {
+        const int token_line = line;
+        const int token_column = column;
+
         int state = START_STATE_ID;
         int last_accept = -1;
         size_t last_accept_pos = pos;
@@ -180,7 +186,6 @@ std::vector<TokenMatch> scan(const std::string& input) {
 
             if (ACCEPT_TABLE[state] != -1) {
                 const size_t current_end = i + 1;
-
                 if (last_accept == -1 ||
                     current_end > last_accept_pos ||
                     (current_end == last_accept_pos && PRIORITY_TABLE[state] < last_priority)) {
@@ -192,13 +197,35 @@ std::vector<TokenMatch> scan(const std::string& input) {
         }
 
         if (last_accept != -1) {
-            result.push_back(TokenMatch{TOKEN_TABLE[last_accept], static_cast<int>(pos), static_cast<int>(last_accept_pos)});
+            result.push_back(TokenMatch{
+                TOKEN_TABLE[last_accept],
+                static_cast<int>(pos),
+                static_cast<int>(last_accept_pos),
+                token_line,
+                token_column
+            });
+
+            // advance line/column across the matched lexeme
+            for (size_t i = pos; i < last_accept_pos; ++i) {
+                if (input[i] == '\n') {
+                    line++;
+                    column = 1;
+                } else {
+                    column++;
+                }
+            }
             pos = last_accept_pos;
         } else {
+            // unknown character: skip it, but still update line/column
+            if (input[pos] == '\n') {
+                line++;
+                column = 1;
+            } else {
+                column++;
+            }
             pos += 1;
         }
     }
-
     return result;
 }
 )";

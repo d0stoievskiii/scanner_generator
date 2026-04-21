@@ -77,8 +77,8 @@ int main() {
 
         out << "    { \"token\": \"" << jsonEscape(t.token)
             << "\", \"lexeme\": \"" << jsonEscape(lexeme)
-            << "\", \"start\": " << t.start
-            << ", \"end\": " << t.end << " }";
+            << "\", \"line\": " << t.line
+            << ", \"column\": " << t.column << " }";
 
         if (i + 1 < tokens.size()) {
             out << ",";

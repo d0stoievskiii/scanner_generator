@@ -1,16 +1,26 @@
+ifeq ($(OS),Windows_NT)
+    RM = del /Q /F
+    EXT = .exe
+    FIX_PATH = $(subst /,\,$1)
+else
+    RM = rm -f
+    EXT =
+    FIX_PATH = $1
+endif
+
 CXX := g++
 CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -pedantic
 
-APP := scanner
-DBG_APP := scanner_debug
-TOKENS_APP := scanner_tokens_json
+APP := scanner$(EXT)
+DBG_APP := scanner_debug$(EXT)
+TOKENS_APP := scanner_tokens_json$(EXT)
+
 SPEC ?= regexes_ex.txt
 AFD_OUT ?= afd.json
 
 .PHONY: all clean run debug export-afd export-tokens
 
 all: $(APP) $(DBG_APP) $(TOKENS_APP)
-
 
 $(APP): main.cpp generate_scanner_code.cpp
 	$(CXX) $(CXXFLAGS) main.cpp generate_scanner_code.cpp -o $@
@@ -34,4 +44,4 @@ debug: $(DBG_APP)
 	./$(DBG_APP) $(SPEC)
 
 clean:
-	rm -f $(APP) $(DBG_APP) $(TOKENS_APP)
+	$(RM) $(APP) $(DBG_APP) $(TOKENS_APP)
