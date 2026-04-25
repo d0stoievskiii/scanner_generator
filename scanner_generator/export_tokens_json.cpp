@@ -3,6 +3,7 @@
 #include <iterator>
 #include <sstream>
 #include <string>
+#include <filesystem>
 
 #include "out_scanner/scanner_gerado.hpp"
 
@@ -46,49 +47,82 @@ static std::string jsonEscape(const std::string& input) {
     return out.str();
 }
 
-int main() {
-    const std::string inputPath = "racket_input.rkt";
-    const std::string outputPath = "token_list.json";
+int main(int argc, char* argv[]) {
+    namespace fs = std::filesystem;
 
-    std::ifstream in(inputPath, std::ios::binary);
-    if (!in.is_open()) {
-        std::cerr << "Erro: nao foi possivel abrir o arquivo de entrada: " << inputPath << "\n";
+    if (argc < 2) {
+        std::cerr << "Uso: scanner <arquivo.rkt>\n";
         return 1;
     }
 
-    const std::string source((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    const fs::path inputPath = argv[1];
+
+    if (!fs::exists(inputPath)) {
+        std::cerr << "Erro: arquivo nao encontrado: " << inputPath.string() << "\n";
+        return 1;
+    }
+
+    std::ifstream in(inputPath, std::ios::binary);
+    if (!in.is_open()) {
+        std::cerr << "Erro: nao foi possivel abrir o arquivo de entrada: "
+                  << inputPath.string() << "\n";
+        return 1;
+    }
+
+    const std::string source(
+        (std::istreambuf_iterator<char>(in)),
+        std::istreambuf_iterator<char>()
+    );
+
     const auto tokens = scan(source);
+
+    // output folder: ../token_lists/
+    fs::path outputDir = "../token_lists";
+    fs::create_directories(outputDir);
+
+    // use input filename without extension
+    fs::path outputPath = outputDir / (inputPath.stem().string() + ".json");
 
     std::ofstream out(outputPath, std::ios::binary);
     if (!out.is_open()) {
-        std::cerr << "Erro: nao foi possivel criar o arquivo de saida: " << outputPath << "\n";
+        std::cerr << "Erro: nao foi possivel criar o arquivo de saida: "
+                  << outputPath.string() << "\n";
         return 1;
     }
 
     out << "{\n";
-    out << "  \"source_file\": \"" << jsonEscape(inputPath) << "\",\n";
+    out << "  \"source_file\": \"" << jsonEscape(inputPath.string()) << "\",\n";
     out << "  \"token_count\": " << tokens.size() << ",\n";
     out << "  \"tokens\": [\n";
 
     for (size_t i = 0; i < tokens.size(); ++i) {
         const auto& t = tokens[i];
-        const std::string lexeme = source.substr(static_cast<size_t>(t.start),
-                                                 static_cast<size_t>(t.end - t.start));
+
+        const std::string lexeme =
+            source.substr(
+                static_cast<size_t>(t.start),
+                static_cast<size_t>(t.end - t.start)
+            );
 
         out << "    { \"token\": \"" << jsonEscape(t.token)
             << "\", \"lexeme\": \"" << jsonEscape(lexeme)
             << "\", \"line\": " << t.line
-            << ", \"column\": " << t.column << " }";
+            << ", \"column\": " << t.column
+            << " }";
 
         if (i + 1 < tokens.size()) {
             out << ",";
         }
+
         out << "\n";
     }
 
     out << "  ]\n";
     out << "}\n";
 
-    std::cout << "Arquivo token_list.json gerado com " << tokens.size() << " tokens.\n";
+    std::cout << "Arquivo gerado: "
+              << outputPath.string()
+              << " (" << tokens.size() << " tokens)\n";
+
     return 0;
 }
